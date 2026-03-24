@@ -1,3 +1,6 @@
+`https://www.plantuml.com/`
+`https://kroki.io/`
+
 @startuml
 skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
