@@ -1,0 +1,551 @@
+openapi: 3.0.3
+info:
+  title: Projeto Java OO API
+  version: 1.0.0
+  description: API REST para gestão de usuários, planos e assinaturas.
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+paths:
+  /health:
+    get:
+      tags: [system]
+      summary: Verifica saúde da API
+      responses:
+        '200':
+          description: API ativa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /users:
+    get:
+      tags: [users]
+      summary: Lista usuários
+      responses:
+        '200':
+          description: Lista retornada com sucesso
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+    post:
+      tags: [users]
+      summary: Cria usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateOrUpdateRequest'
+      responses:
+        '201':
+          description: Usuário criado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags: [users]
+      summary: Busca usuário por ID
+      responses:
+        '200':
+          description: Usuário encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    put:
+      tags: [users]
+      summary: Atualiza usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateOrUpdateRequest'
+      responses:
+        '200':
+          description: Usuário atualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    delete:
+      tags: [users]
+      summary: Remove usuário
+      responses:
+        '200':
+          description: Usuário removido
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          deleted:
+                            type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /plans:
+    get:
+      tags: [plans]
+      summary: Lista planos
+      responses:
+        '200':
+          description: Lista retornada com sucesso
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Plan'
+    post:
+      tags: [plans]
+      summary: Cria plano
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanCreateOrUpdateRequest'
+      responses:
+        '201':
+          description: Plano criado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Plan'
+
+  /plans/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags: [plans]
+      summary: Busca plano por ID
+      responses:
+        '200':
+          description: Plano encontrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Plan'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    put:
+      tags: [plans]
+      summary: Atualiza plano
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanCreateOrUpdateRequest'
+      responses:
+        '200':
+          description: Plano atualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Plan'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    delete:
+      tags: [plans]
+      summary: Remove plano
+      responses:
+        '200':
+          description: Plano removido
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          deleted:
+                            type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /subscriptions:
+    get:
+      tags: [subscriptions]
+      summary: Lista assinaturas
+      responses:
+        '200':
+          description: Lista retornada com sucesso
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Subscription'
+    post:
+      tags: [subscriptions]
+      summary: Cria assinatura
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionCreateOrUpdateRequest'
+      responses:
+        '201':
+          description: Assinatura criada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Subscription'
+
+  /subscriptions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags: [subscriptions]
+      summary: Busca assinatura por ID
+      responses:
+        '200':
+          description: Assinatura encontrada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    put:
+      tags: [subscriptions]
+      summary: Atualiza assinatura
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionCreateOrUpdateRequest'
+      responses:
+        '200':
+          description: Assinatura atualizada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    delete:
+      tags: [subscriptions]
+      summary: Remove assinatura
+      responses:
+        '200':
+          description: Assinatura removida
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          deleted:
+                            type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /checkout/activate:
+    post:
+      tags: [checkout]
+      summary: Ativa assinatura a partir do checkout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutActivationRequest'
+      responses:
+        '200':
+          description: Ativação processada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ActivationResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  responses:
+    BadRequest:
+      description: Requisição inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+      required: [id, first_name, last_name, email]
+
+    UserCreateOrUpdateRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+      required: [first_name, last_name, email]
+
+    Plan:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        cpus:
+          type: integer
+        ram:
+          type: integer
+        disk:
+          type: integer
+      required: [id, name, description, cpus, ram, disk]
+
+    PlanCreateOrUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        cpus:
+          type: integer
+        ram:
+          type: integer
+        disk:
+          type: integer
+      required: [name, description]
+
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        subscription_id:
+          type: string
+        user_id:
+          type: integer
+          format: int64
+        plan_id:
+          type: integer
+          format: int64
+        payment_method:
+          type: string
+        payment_approve_date:
+          type: string
+          format: date-time
+          nullable: true
+        start_date:
+          type: string
+          format: date-time
+          nullable: true
+        end_date:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+      required: [id, subscription_id, user_id, plan_id, payment_method, status]
+
+    SubscriptionCreateOrUpdateRequest:
+      type: object
+      properties:
+        subscription_id:
+          type: string
+        user_id:
+          type: integer
+          format: int64
+        plan_id:
+          type: integer
+          format: int64
+        payment_method:
+          type: string
+        payment_approve_date:
+          type: string
+          format: date-time
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+      required: [subscription_id, user_id, plan_id, payment_method]
+
+    CheckoutActivationRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        plan:
+          type: string
+        subscription_id:
+          type: string
+        payment_method:
+          type: string
+        payment_aprove_date:
+          type: string
+          format: date-time
+      required: [first_name, last_name, email, plan, subscription_id, payment_method]
+
+    ActivationResult:
+      type: object
+      properties:
+        action:
+          type: string
+        user_id:
+          type: integer
+          format: int64
+          nullable: true
+        subscription_id:
+          type: string
+        message:
+          type: string
+      required: [action, subscription_id, message]
