@@ -1,3 +1,5 @@
 .vscode
 README.md
 teste.md
+*.db
+*.sqlite3
